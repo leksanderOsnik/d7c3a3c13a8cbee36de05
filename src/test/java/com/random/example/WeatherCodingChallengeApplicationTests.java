@@ -1,10 +1,10 @@
-package com.genesys.example;
+package com.random.example;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GenesysCodingChallengeApplicationTests {
+class WeatherCodingChallengeApplicationTests {
 
     @Test
     void contextLoads() {
