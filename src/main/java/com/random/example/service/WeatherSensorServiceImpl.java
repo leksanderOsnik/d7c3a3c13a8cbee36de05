@@ -1,14 +1,22 @@
-package com.random.example;
+package com.random.example.service;
 
-import com.random.example.WeatherSensorRepository;
+import com.random.example.entity.WeatherSensor;
+import com.random.example.entity.WeatherSensorMetrics;
+import com.random.example.repository.WeatherSensorMetricsRepository;
+import com.random.example.repository.WeatherSensorRepository;
+import net.minidev.json.JSONObject;
+import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mapping.model.Property;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
+import java.util.List;
+import java.util.NoSuchElementException;
 
-@Service("WeatherSensorService")
+@Service
 public class WeatherSensorServiceImpl implements WeatherSensorService {
 
     @Autowired
@@ -28,29 +36,39 @@ public class WeatherSensorServiceImpl implements WeatherSensorService {
 
     @Override
     public void addWeatherSensorMetrics(Long sensorId, WeatherSensorMetrics metrics) {
-        metrics.setSensorId(sensorId);
-        metrics.setTimestamp(LocalDate.now().toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-        metricsRepository.save(metrics);
+        repository.findById(sensorId).ifPresentOrElse(sensor -> {
+            metrics.setSensorId(sensorId);
+            metrics.setTimestamp(LocalDate.now().toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
+            metricsRepository.save(metrics);
+        }, () -> {
+            throw new NoSuchElementException("Sensor with id " + sensorId + " not found");
+        });
+
     }
 
     @Override
-    public void getAllWeatherSensors() {
-        repository.findAll();
+    public List<WeatherSensor> getAllWeatherSensors() {
+       return repository.findAll();
     }
 
     @Override
-    public void getOneWeatherSensor(Long id) {
-        repository.findById(id);
+    public WeatherSensor getOneWeatherSensor(Long id) {
+         return repository.findById(id).orElseThrow(() -> new NoSuchElementException("No such element"));
     }
 
     @Override
-    public void getAllWeatherSensorsMetrics() {
-        metricsRepository.findAll();
+    public List<WeatherSensorMetrics> getOneWeatherSensorMetrics(Long Id) {
+        return metricsRepository.findAllBySensorId(Id);
     }
 
     @Override
-    public void getOneWeatherSensorMetricsInTimePeriod(Long id, long days) {
+    public List<WeatherSensorMetrics> getOneWeatherSensorMetricsInTimePeriod(Long id, Long days) {
         var timestamp = LocalDate.now().minusDays(days).toEpochSecond(LocalTime.now(), ZoneOffset.UTC);
-        metricsRepository.findAllBySensorIdAndTimestampGreaterThanOrderByTimestampDesc(id, timestamp);
+        return metricsRepository.findAllBySensorIdAndTimestampGreaterThanOrderByTimestampDesc(id, timestamp);
+
+    }
+
+    public List<JSONObject> getAverageTemperatureAndHumidity(Long sensorId){
+        return metricsRepository.getAverageTemperatureAndHumidity(sensorId);
     }
 }

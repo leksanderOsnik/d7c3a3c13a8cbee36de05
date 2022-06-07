@@ -1,4 +1,4 @@
-package com.random.example;
+package com.random.example.entity;
 
 import org.springframework.data.annotation.Id;
 
@@ -14,9 +14,8 @@ public class WeatherSensorMetrics {
 
     private double humidity;
 
-    public WeatherSensorMetrics(Long id, Long sensorId, double temperature, double humidity) {
+    public WeatherSensorMetrics(Long id, double temperature, double humidity) {
         this.id = id;
-        this.sensorId = sensorId;
         this.temperature = temperature;
         this.humidity = humidity;
     }

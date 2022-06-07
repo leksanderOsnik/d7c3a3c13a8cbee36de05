@@ -1,4 +1,4 @@
-package com.random.example;
+package com.random.example.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
