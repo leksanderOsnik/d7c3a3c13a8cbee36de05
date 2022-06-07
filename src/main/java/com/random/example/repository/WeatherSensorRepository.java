@@ -6,10 +6,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 import java.util.Optional;
 
-@RepositoryRestResource
-public interface WeatherSensorRepository extends MongoRepository<WeatherSensor, String> {
+@RepositoryRestResource(collectionResourceRel = "WeatherSensors", path = "weatherSensors")
+public interface WeatherSensorRepository extends MongoRepository<WeatherSensor, Long> {
 
-    Optional<WeatherSensor> findById(String id);
+    Optional<WeatherSensor> findById(Long id);
 
     List<WeatherSensor> findAll();
 

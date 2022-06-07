@@ -1,8 +1,12 @@
 package com.random.example;
 
+import org.springframework.data.annotation.Id;
+
 public class WeatherSensorMetrics {
 
-    private String sensorId;
+    @Id
+    private Long id;
+    private Long sensorId;
 
     private long timestamp;
 
@@ -10,24 +14,18 @@ public class WeatherSensorMetrics {
 
     private double humidity;
 
-    private double windSpeed;
-
-    private double pressure;
-
-    public WeatherSensorMetrics(String sensorId, long timestamp, double temperature, double humidity, double windSpeed, double pressure) {
+    public WeatherSensorMetrics(Long id, Long sensorId, double temperature, double humidity) {
+        this.id = id;
         this.sensorId = sensorId;
-        this.timestamp = timestamp;
         this.temperature = temperature;
         this.humidity = humidity;
-        this.windSpeed = windSpeed;
-        this.pressure = pressure;
     }
 
-    public String getSensorId() {
+    public Long getSensorId() {
         return sensorId;
     }
 
-    public void setSensorId(String sensorId) {
+    public void setSensorId(Long sensorId) {
         this.sensorId = sensorId;
     }
 
@@ -55,21 +53,7 @@ public class WeatherSensorMetrics {
         this.humidity = humidity;
     }
 
-    public double getWindSpeed() {
-        return windSpeed;
-    }
 
-    public void setWindSpeed(double windSpeed) {
-        this.windSpeed = windSpeed;
-    }
-
-    public double getPressure() {
-        return pressure;
-    }
-
-    public void setPressure(double pressure) {
-        this.pressure = pressure;
-    }
 
 
 }

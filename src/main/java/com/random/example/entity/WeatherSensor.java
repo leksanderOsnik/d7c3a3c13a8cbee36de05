@@ -1,27 +1,25 @@
 package com.random.example;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
-import javax.annotation.processing.Generated;
-
+@Document(collection = "WeatherSensors")
 public class WeatherSensor {
 
     @Id
-    private String id;
-
-    private String sensorName;
+    private Long id;
     private String country;
     private String city;
 
-    public WeatherSensor(String id, String country, String city){
+    public WeatherSensor(Long id, String country, String city){
         this.id = id;
         this.country = country;
         this.city = city;
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -33,7 +31,7 @@ public class WeatherSensor {
         return city;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
