@@ -3,7 +3,7 @@
 ### This weather api application is built with Java and Spring Boot. It uses a MongoDB database. The application has no UI and is only a REST API example.
 ## Required tools
 * Java 11
-* 
+
 
 In order to launch the application open the command line in the application folder and run the gradle bootRun task.  This will start the application.
 
