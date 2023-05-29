@@ -60,10 +60,10 @@ public class WeatherSensorControllerTest {
         weatherSensorRepository.save(new WeatherSensor(2L, "France", "Paris"));
         weatherSensorRepository.save(new WeatherSensor(3L, "USA", "New York"));
 
-        var m1 = new WeatherSensorMetrics(13L,  10.0, 20.0);
+        var m1 = new WeatherSensorMetrics(13L,  15.0, 23.0);
         var m2 = new WeatherSensorMetrics(14L,  15.0, 28.0);
         var m3 = new WeatherSensorMetrics(15L,  15.0, 23.0);
-        var m4 = new WeatherSensorMetrics(16L,  10.0, 20.0);
+        var m4 = new WeatherSensorMetrics(16L,  15.0, 23.0);
         var m5 = new WeatherSensorMetrics(17L,  15.0, 28.0);
         var m6 = new WeatherSensorMetrics(18L,  25.0, 74.0);
 
@@ -93,7 +93,7 @@ public class WeatherSensorControllerTest {
     @Test
     public void testGetAllWeatherSensors() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(weatherSensorController).build();
-        mockMvc.perform(get("/weatherSensors"))
+        mockMvc.perform(get("/api/weatherSensors"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.[0].id").value(1L))
@@ -105,7 +105,16 @@ public class WeatherSensorControllerTest {
     @Test
     public void testGetWeatherSensorInTimePeriod() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(weatherSensorController).build();
-        mockMvc.perform(get("/weatherSensors/2/metrics/7"))
+        mockMvc.perform(post("/api/addMetrics")
+                        .param("sensorId", String.valueOf(2))
+                        .param("id",String.valueOf(109))
+                        .param("temperature", String.valueOf(10.0))
+                        .param("humidity", String.valueOf(20.0)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/sensorInTimePeriod")
+                        .param("id", String.valueOf(2))
+                        .param("days", String.valueOf(4)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.[0].sensorId").value(2))
@@ -118,10 +127,14 @@ public class WeatherSensorControllerTest {
     @Test
     public void testAddWeatherSensorMetrics() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(weatherSensorController).build();
-        mockMvc.perform(post("/addMetrics/1/19/15.0/23.0"))
+        mockMvc.perform(post("/api/addMetrics")
+                        .param("sensorId", String.valueOf(1))
+                        .param("id",String.valueOf(109))
+                        .param("temperature", String.valueOf(15.0))
+                        .param("humidity", String.valueOf(23.0)))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/weatherSensors/1/metrics/1"))
+        mockMvc.perform(get("/api/sensor").param("id", String.valueOf(1)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.[0].sensorId").value(1))

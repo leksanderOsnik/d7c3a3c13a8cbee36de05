@@ -17,9 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @RestController("WeatherSensorController")
+@RequestMapping("/api")
 public class WeatherSensorController {
 
     @Autowired
@@ -30,41 +33,43 @@ public class WeatherSensorController {
     @Autowired
     private WeatherSensorService weatherSensorService;
 
-    @GetMapping(value = "/weatherSensors")
+    @GetMapping("/weatherSensors")
     public ResponseEntity<List<WeatherSensor>> getAllWeatherSensors() {
         return ResponseEntity.ok(weatherSensorService.getAllWeatherSensors());
     }
 
-    @GetMapping(value = "/weatherSensors/{id}/metrics")
-    public ResponseEntity<List<WeatherSensorMetrics>> getOneWeatherSensorMetrics(@PathVariable("id") Long id) {
+    @GetMapping("/sensor")
+    public ResponseEntity<List<WeatherSensorMetrics>> getOneWeatherSensorMetrics(@RequestParam("id") Long id) {
         return ResponseEntity.ok(weatherSensorService.getOneWeatherSensorMetrics(id));
     }
 
-    @GetMapping(value = "/weatherSensors/{id}/metrics/{days}")
-    public ResponseEntity<List<WeatherSensorMetrics>> getOneWeatherSensorMetricsInTimePeriod(@PathVariable("id")Long id, @PathVariable("days") Long days) {
+    @GetMapping(value = "/sensorInTimePeriod")
+    public ResponseEntity<List<WeatherSensorMetrics>> getOneWeatherSensorMetricsInTimePeriod(@RequestParam("id")Long id,
+                                                                                             @RequestParam("days") Long days) {
         return ResponseEntity.ok(weatherSensorService.getOneWeatherSensorMetricsInTimePeriod(id, days));
     }
 
-    @RequestMapping(value = "/addSensor/{id}/{country}/{city}", method = RequestMethod.POST)
-    public void addWeatherSensor(@PathVariable("id") Long id, @PathVariable("country") String country, @PathVariable("city") String city) {
+    @PostMapping(value = "/addSensor")
+    public void addWeatherSensor(@RequestParam("id") Long id, @RequestParam("country") String country,
+                                 @RequestParam("city") String city) {
         weatherSensorService.addWeatherSensor(new WeatherSensor(id, country, city));
     }
 
-    @RequestMapping(value = "/addMetrics/{sensorId}/{id}/{temperature}/{humidity}", method = RequestMethod.POST)
-    public void addWeatherSensorMetrics(@PathVariable("sensorId") Long sensorId, @PathVariable("id") Long id,
-                                        @PathVariable("temperature") double temperature,
-                                        @PathVariable("humidity") double humidity) {
+    @PostMapping(value = "/addMetrics")
+    public void addWeatherSensorMetrics(@RequestParam("sensorId") Long sensorId, @RequestParam("id") Long id,
+                                        @RequestParam("temperature") double temperature,
+                                        @RequestParam("humidity") double humidity) {
         weatherSensorService.addWeatherSensorMetrics(sensorId, new WeatherSensorMetrics(id, temperature,
                 humidity));
     }
 
-    @RequestMapping(value = "/removeSensor/{id}", method = RequestMethod.DELETE)
-    public void removeWeatherSensor(@PathVariable("id") Long id) {
+    @DeleteMapping(value = "/removeSensor")
+    public void removeWeatherSensor(@RequestParam("id") Long id) {
         weatherSensorService.removeWeatherSensor(id);
     }
 
-    @RequestMapping(value = "/weatherSensors/{id}/metrics/average", method = RequestMethod.GET)
-    public ResponseEntity<List<JSONObject>> getAverageTemperature(@PathVariable("id") Long id) {
+    @GetMapping(value = "/average")
+    public ResponseEntity<List<JSONObject>> getAverageTemperature(@RequestParam("id") Long id) {
         return ResponseEntity.ok(weatherSensorService.getAverageTemperatureAndHumidity(id));
     }
 
@@ -79,34 +84,27 @@ public class WeatherSensorController {
 //        weatherSensorRepository.save(new WeatherSensor(1L, "London", "UK"));
 //        weatherSensorRepository.save(new WeatherSensor(2L, "Paris", "France"));
 //        weatherSensorRepository.save(new WeatherSensor(3L, "New York", "USA"));
+//        Random rand = new Random();
+//        AtomicInteger id = new AtomicInteger(1);
+//        for(var i = 0; i<100; i++) {
+//            var m1 = new WeatherSensorMetrics(id.longValue(), 5 + rand.nextFloat() * (30-5), 40 + rand.nextFloat() * (70-40));
+//            var m2 = new WeatherSensorMetrics(id.longValue(), 5 + rand.nextFloat() * (30-5), 40 + rand.nextFloat() * (70-40));
+//            var m3 = new WeatherSensorMetrics(id.longValue(), 5 + rand.nextFloat() * (30-5), 40 + rand.nextFloat() * (70-40));
 //
-//        var m1 = new WeatherSensorMetrics(13L,  10.0, 20.0);
-//        var m2 = new WeatherSensorMetrics(14L,  15.0, 28.0);
-//        var m3 = new WeatherSensorMetrics(15L,  15.0, 23.0);
-//        var m4 = new WeatherSensorMetrics(16L,  10.0, 20.0);
-//        var m5 = new WeatherSensorMetrics(17L,  15.0, 28.0);
-//        var m6 = new WeatherSensorMetrics(18L,  25.0, 74.0);
+//            m1.setSensorId(1L);
+//            m2.setSensorId(2L);
+//            m3.setSensorId(3L);
 //
-//        m1.setSensorId(1L);
-//        m2.setSensorId(1L);
-//        m3.setSensorId(2L);
-//        m4.setSensorId(2L);
-//        m5.setSensorId(3L);
-//        m6.setSensorId(3L);
+//            m1.setTimestamp(LocalDate.now().minusDays(rand.nextInt()).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
+//            m2.setTimestamp(LocalDate.now().minusDays(rand.nextInt()).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
+//            m3.setTimestamp(LocalDate.now().minusDays(rand.nextInt()).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
 //
-//        m1.setTimestamp(LocalDate.now().minusDays(25).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-//        m2.setTimestamp(LocalDate.now().minusDays(24).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-//        m3.setTimestamp(LocalDate.now().minusDays(7).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-//        m4.setTimestamp(LocalDate.now().minusDays(5).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-//        m5.setTimestamp(LocalDate.now().minusDays(3).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
-//        m6.setTimestamp(LocalDate.now().minusDays(2).toEpochSecond(LocalTime.now(), ZoneOffset.UTC));
+//            metricsRepository.save(m1);
+//            metricsRepository.save(m2);
+//            metricsRepository.save(m3);
+//        }
 //
-//        metricsRepository.save(m1);
-//        metricsRepository.save(m2);
-//        metricsRepository.save(m3);
-//        metricsRepository.save(m4);
-//        metricsRepository.save(m5);
-//        metricsRepository.save(m6);
+//
 //    }
 
 }
