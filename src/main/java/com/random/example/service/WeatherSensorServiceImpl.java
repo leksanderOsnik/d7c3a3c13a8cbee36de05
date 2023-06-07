@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mapping.model.Property;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -71,4 +72,12 @@ public class WeatherSensorServiceImpl implements WeatherSensorService {
     public List<JSONObject> getAverageTemperatureAndHumidity(Long sensorId){
         return metricsRepository.getAverageTemperatureAndHumidity(sensorId);
     }
+
+    @Override
+    public List<WeatherSensorMetrics> getSensorMetricsBetweenDates(Long id, String timestamp1, String timestamp2){
+        long t1 = LocalDate.parse(timestamp1).toEpochSecond(LocalTime.now(), ZoneOffset.UTC);
+        long t2 = LocalDate.parse(timestamp2).toEpochSecond(LocalTime.now(), ZoneOffset.UTC);
+        return metricsRepository.findWeatherSensorMetricsByTimestampIsBetween(id, t1, t2);
+    }
 }
+

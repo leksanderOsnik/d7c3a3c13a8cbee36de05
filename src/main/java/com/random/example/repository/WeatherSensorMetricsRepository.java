@@ -17,6 +17,9 @@ public interface WeatherSensorMetricsRepository extends MongoRepository<WeatherS
 
     List<WeatherSensorMetrics> findAllBySensorIdAndTimestampGreaterThanOrderByTimestampDesc(Long sensorId,
                                                                                           long timestamp);
+
+    List<WeatherSensorMetrics> findWeatherSensorMetricsByTimestampIsBetween(Long sensorId, long timestamp1,
+                                                                            long timestamp2);
     //get average temperature and humidity for a sensor based on the sensorId
     @Aggregation(pipeline = {
             "{ $match: { sensorId: { $eq: ?0} }}",

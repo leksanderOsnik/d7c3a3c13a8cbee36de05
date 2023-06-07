@@ -10,21 +10,23 @@ import java.util.List;
 @Service
 public interface WeatherSensorService {
 
-    public void addWeatherSensor(WeatherSensor weatherSensor);
+     void addWeatherSensor(WeatherSensor weatherSensor);
 
-    public void removeWeatherSensor(Long id);
+     void removeWeatherSensor(Long id);
 
-    public void addWeatherSensorMetrics(Long sensorId, WeatherSensorMetrics metrics);
+     void addWeatherSensorMetrics(Long sensorId, WeatherSensorMetrics metrics);
 
-    public List<WeatherSensor> getAllWeatherSensors();
+     List<WeatherSensor> getAllWeatherSensors();
 
-    public WeatherSensor getOneWeatherSensor(Long id);
+     WeatherSensor getOneWeatherSensor(Long id);
 
-    public List<WeatherSensorMetrics> getOneWeatherSensorMetrics(Long Id);
+     List<WeatherSensorMetrics> getOneWeatherSensorMetrics(Long Id);
 
-    public List<WeatherSensorMetrics> getOneWeatherSensorMetricsInTimePeriod(Long id, Long days);
+     List<WeatherSensorMetrics> getOneWeatherSensorMetricsInTimePeriod(Long id, Long days);
 
-    public List<JSONObject> getAverageTemperatureAndHumidity(Long sensorId);
+     List<JSONObject> getAverageTemperatureAndHumidity(Long sensorId);
+
+     List<WeatherSensorMetrics> getSensorMetricsBetweenDates(Long id, String timestamp1, String timestamp2);
 
 
 

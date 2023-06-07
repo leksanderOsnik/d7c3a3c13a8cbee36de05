@@ -73,6 +73,11 @@ public class WeatherSensorController {
         return ResponseEntity.ok(weatherSensorService.getAverageTemperatureAndHumidity(id));
     }
 
+    @GetMapping(value="/sensorBetweenDates")
+    public ResponseEntity<List<WeatherSensorMetrics>> getOneWeatherSensorMetricsBetweenDates(@RequestParam ("id") Long id, @RequestParam ("date1") String date1, @RequestParam ("date2") String date2){
+        return ResponseEntity.ok(weatherSensorService.getSensorMetricsBetweenDates(id, date1, date2));
+    }
+
 
 
 
